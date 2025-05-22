@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+protocol CryptoListRoutingProcessable: AnyObject {
+    
+}
+
+class CryptoListRouter: CryptoListRoutingProcessable {
+    weak var viewController: CryptoListViewController?
+    
+    init(viewController: CryptoListViewController? = nil) {
+        self.viewController = viewController
+    }
+}

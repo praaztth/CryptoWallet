@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol DisplayProcessable: AnyObject {
+protocol LoginDisplayProcessable: AnyObject {
     func showLoginSuccess()
     func showLoginFailure(viewModel: Model.ViewModel)
 }
@@ -17,11 +17,11 @@ protocol LoginDelegate: AnyObject {
     func buttonTapped()
 }
 
-class LoginViewController: UIViewController, DisplayProcessable, LoginDelegate {
+class LoginViewController: UIViewController, LoginDisplayProcessable, LoginDelegate {
     private let loginView = LoginView()
     
-    var router: RoutingProcessable?
-    var interactor: BusinessProcessable?
+    var router: LoginRoutingProcessable?
+    var interactor: LoginBusinessProcessable?
     
     init(configurator: LoginConfigurator) {
         super.init(nibName: nil, bundle: nil)

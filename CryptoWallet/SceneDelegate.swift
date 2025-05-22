@@ -24,7 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let nvc = UINavigationController()
         
         if authStorage.isAuthorized {
-            let vc = CryptoListViewController()
+            let configurator = CryptoListConfigurator()
+            let vc = CryptoListViewController(configurator: configurator)
             nvc.viewControllers = [vc]
             
         } else {

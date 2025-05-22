@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol WorkingProcessable: AnyObject {
+protocol LoginWorkingProcessable: AnyObject {
     func login(username: String, password: String, callback: (Bool, String?) -> Void)
 }
 
-class LoginWorker: WorkingProcessable {
+class LoginWorker: LoginWorkingProcessable {
     func login(username: String, password: String, callback: (Bool, String?) -> Void) {
         if username == "1234", password == "1234" {
             callback(true, nil)

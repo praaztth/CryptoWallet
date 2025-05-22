@@ -7,16 +7,16 @@
 
 import Foundation
 
-protocol BusinessProcessable: AnyObject {
+protocol LoginBusinessProcessable: AnyObject {
     func login(request: Model.Request)
 }
 
-class LoginInteractor: BusinessProcessable {
-    var presenter: PresentationProcessable
-    var worker: WorkingProcessable
+class LoginInteractor: LoginBusinessProcessable {
+    var presenter: LoginPresentationProcessable
+    var worker: LoginWorkingProcessable
     let authStorage: AuthStorageProtocol
     
-    init(presenter: PresentationProcessable, authStorage: AuthStorageProtocol) {
+    init(presenter: LoginPresentationProcessable, authStorage: AuthStorageProtocol) {
         self.presenter = presenter
         self.worker = LoginWorker()
         self.authStorage = authStorage

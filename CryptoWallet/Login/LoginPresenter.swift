@@ -7,15 +7,15 @@
 
 import Foundation
 
-protocol PresentationProcessable: AnyObject {
+protocol LoginPresentationProcessable: AnyObject {
     func presentLoginSuccess()
     func presentLoginFailure(responce: Model.Responce)
 }
 
-class LoginPresenter: PresentationProcessable {
-    weak var viewController: DisplayProcessable?
+class LoginPresenter: LoginPresentationProcessable {
+    weak var viewController: LoginDisplayProcessable?
     
-    init(viewController: DisplayProcessable) {
+    init(viewController: LoginDisplayProcessable) {
         self.viewController = viewController
     }
     
