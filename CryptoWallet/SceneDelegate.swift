@@ -21,12 +21,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowsScene)
         
         let authStorage = AuthStorage.shared
+        let nvc = UINavigationController()
+        
         if authStorage.isAuthorized {
-            window?.rootViewController = CryptoListViewController()
+            let vc = CryptoListViewController()
+            nvc.viewControllers = [vc]
+            
         } else {
-            window?.rootViewController = LoginViewController()
+            let configurator = LoginConfigurator(authStorage: authStorage)
+            let vc = LoginViewController(configurator: configurator)
+            nvc.viewControllers = [vc]
         }
         
+        window?.rootViewController = nvc
         window?.makeKeyAndVisible()
     }
 

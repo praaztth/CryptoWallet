@@ -15,6 +15,11 @@ class LoginConfigurator {
     }
     
     func configure(viewController: LoginViewController) {
+        let router = LoginRouter(viewController: viewController)
+        let presenter = LoginPresenter(viewController: viewController)
+        let interactor = LoginInteractor(presenter: presenter, authStorage: authStorage)
         
+        viewController.router = router
+        viewController.interactor = interactor
     }
 }

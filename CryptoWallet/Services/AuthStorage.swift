@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol AuthStorageProtocol {
+protocol AuthStorageProtocol: AnyObject {
     var isAuthorized: Bool { get set }
     func clear()
 }

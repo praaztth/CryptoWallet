@@ -7,6 +7,19 @@
 
 import Foundation
 
-class LoginRouter {
+protocol RoutingProcessable: AnyObject {
+    func routeToCryptoList()
+}
+
+class LoginRouter: RoutingProcessable {
+    weak var viewController: LoginViewController?
     
+    init(viewController: LoginViewController?) {
+        self.viewController = viewController
+    }
+    
+    func routeToCryptoList() {
+        let vc = CryptoListViewController()
+        viewController?.navigationController?.viewControllers = [vc]
+    }
 }
