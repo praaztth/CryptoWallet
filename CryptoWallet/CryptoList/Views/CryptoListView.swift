@@ -22,10 +22,14 @@ class CryptoListView: UIView {
     }()
     
     let tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .systemGroupedBackground
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "simpleCell")
+        tableView.layer.cornerRadius = 40
+        tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        tableView.layer.masksToBounds = true
+        tableView.separatorStyle = .none
+        tableView.register(CryptoListTableViewCell.self, forCellReuseIdentifier: "CryptoListTableViewCell")
         return tableView
     }()
     
@@ -60,9 +64,9 @@ class CryptoListView: UIView {
             headerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             headerView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             headerView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 258),
+            headerView.heightAnchor.constraint(equalToConstant: 298),
             
-            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -40),
             tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             tableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),

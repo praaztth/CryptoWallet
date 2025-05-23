@@ -53,6 +53,10 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
         title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        loadData()
+    }
+    
+    func loadData() {
         cryptoListView.startLoading()
         interactor?.loadData()
     }
@@ -74,8 +78,15 @@ extension CryptoListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "simpleCell", for: indexPath)
-        cell.textLabel?.text = currencies[indexPath.row].name
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CryptoListTableViewCell", for: indexPath) as? CryptoListTableViewCell else {
+            return UITableViewCell(frame: .zero)
+        }
+        
+        let item = currencies[indexPath.row]
+        let name = item.name
+        let price = item.price
+        let percentChange = item.percentChange
+        cell.configure(name: name, price: price, percentChange: percentChange)
         
         return cell
     }
@@ -83,7 +94,7 @@ extension CryptoListViewController: UITableViewDataSource {
 
 extension CryptoListViewController: CryptoListHeaderButtonProtocol {
     func updateButtonTapped() {
-        print("Updating...")
+        loadData()
     }
     
     func logoutButtonTapped() {

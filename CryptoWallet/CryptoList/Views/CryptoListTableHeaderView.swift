@@ -35,7 +35,6 @@ class CryptoListTableHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .white
         setupViews()
         button.menu = buildMenu()
     }
@@ -58,6 +57,8 @@ class CryptoListTableHeaderView: UIView {
     }
     
     func setupViews() {
+        backgroundColor = .systemGroupedBackground
+        
         addSubview(label)
         addSubview(button)
         

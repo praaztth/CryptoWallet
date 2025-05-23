@@ -63,8 +63,6 @@ class CryptoListHeaderView: UIView {
     }
     
     func setupViews() {
-        backgroundColor = .systemPink
-        
         addSubview(titleLabel)
         addSubview(rightButton)
         addSubview(advertisingLabel)
