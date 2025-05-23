@@ -32,7 +32,6 @@ class NetworkService: NetworkServiceProtocol {
             dispatchGroup.enter()
             
             guard let url = currencyURL(currency: currency) else {
-//                completion(.failure(.invalidURL))
                 error = .invalidURL
                 dispatchGroup.leave()
                 return
@@ -42,14 +41,12 @@ class NetworkService: NetworkServiceProtocol {
                 if let error = error {
                     self.error = .requestFailed(error.localizedDescription)
                     dispatchGroup.leave()
-//                    completion(.failure(.requestFailed(error.localizedDescription)))
                     return
                 }
                 
                 guard let data = data else {
                     self.error = .emptyResponce
                     dispatchGroup.leave()
-//                    completion(.failure(.emptyResponce))
                     return
                 }
                 
@@ -59,26 +56,25 @@ class NetworkService: NetworkServiceProtocol {
                     serialDispatchQueue.sync {
                         self.results.append(metrics)
                     }
-//                    completion(.success(metrics))
                 } catch {
                     self.error = .decodingFailed
-//                    completion(.failure(.decodingFailed))
                 }
                 
                 dispatchGroup.leave()
             }
             
-            
             task.resume()
         }
         
         dispatchGroup.notify(queue: .main) {
-            print("All items are decoded")
             if let error = self.error {
                 completion(.failure(error))
             } else {
                 completion(.success(self.results))
             }
+            
+            self.results = []
+            self.error = nil
         }
     }
     

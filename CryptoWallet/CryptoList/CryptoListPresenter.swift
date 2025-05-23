@@ -10,6 +10,7 @@ import Foundation
 protocol CryptoListPresentationProcessable: AnyObject {
     func presentSuccess(responce: CryptoListModel.Responce)
     func presentError(responce: CryptoListModel.Responce)
+    func presentLoginRequired()
 }
 
 class CryptoListPresenter: CryptoListPresentationProcessable {
@@ -49,6 +50,10 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
     
     func presentError(responce: CryptoListModel.Responce) {
         
+    }
+    
+    func presentLoginRequired() {
+        viewController?.displayLoginRequired()
     }
     
     func formatPrice(price: Double) -> String? {

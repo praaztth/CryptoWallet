@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CryptoListRoutingProcessable: AnyObject {
-    
+    func routeToLogin()
 }
 
 class CryptoListRouter: CryptoListRoutingProcessable {
@@ -16,5 +16,12 @@ class CryptoListRouter: CryptoListRoutingProcessable {
     
     init(viewController: CryptoListViewController? = nil) {
         self.viewController = viewController
+    }
+    
+    func routeToLogin() {
+        let authStorage = AuthStorage.shared
+        let configurator = LoginConfigurator(authStorage: authStorage)
+        let vc = LoginViewController(configurator: configurator)
+        viewController?.view.window?.rootViewController = vc
     }
 }

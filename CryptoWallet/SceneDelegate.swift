@@ -21,20 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowsScene)
         
         let authStorage = AuthStorage.shared
-        let nvc = UINavigationController()
         
         if authStorage.isAuthorized {
-            let configurator = CryptoListConfigurator()
-            let vc = CryptoListViewController(configurator: configurator)
-            nvc.viewControllers = [vc]
+            let tabBarController = MainTabBarController()
+            window?.rootViewController = tabBarController
             
         } else {
             let configurator = LoginConfigurator(authStorage: authStorage)
             let vc = LoginViewController(configurator: configurator)
-            nvc.viewControllers = [vc]
+            window?.rootViewController = vc
         }
         
-        window?.rootViewController = nvc
         window?.makeKeyAndVisible()
     }
 

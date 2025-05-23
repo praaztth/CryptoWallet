@@ -10,6 +10,12 @@ import UIKit
 
 protocol CryptoListDisplayProcessable: AnyObject {
     func displayCurrencies(viewModel: CryptoListModel.ViewModel)
+    func displayLoginRequired()
+}
+
+protocol CryptoListHeaderButtonProtocol: AnyObject {
+    func updateButtonTapped()
+    func logoutButtonTapped()
 }
 
 class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
@@ -36,17 +42,17 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cryptoListView.setTableDelegates(datasource: self)
-        
-        title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        cryptoListView.setNeededDelegates(datasource: self, delegate: self)
         
         let rightButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle.fill"), style: .plain, target: self, action: nil)
         rightButton.tintColor = .black
         navigationItem.rightBarButtonItem = rightButton
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        title = "Home"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         cryptoListView.startLoading()
         interactor?.loadData()
     }
@@ -55,6 +61,10 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
         currencies = viewModel.cellViewModels
         cryptoListView.updateCurrencies()
         cryptoListView.stopLoading()
+    }
+    
+    func displayLoginRequired() {
+        router?.routeToLogin()
     }
 }
 
@@ -69,6 +79,14 @@ extension CryptoListViewController: UITableViewDataSource {
         
         return cell
     }
+}
+
+extension CryptoListViewController: CryptoListHeaderButtonProtocol {
+    func updateButtonTapped() {
+        print("Updating...")
+    }
     
-    
+    func logoutButtonTapped() {
+        interactor?.logout()
+    }
 }

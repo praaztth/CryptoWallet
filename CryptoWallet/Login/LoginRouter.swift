@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol LoginRoutingProcessable: AnyObject {
     func routeToCryptoList()
@@ -19,8 +20,7 @@ class LoginRouter: LoginRoutingProcessable {
     }
     
     func routeToCryptoList() {
-        let configurator = CryptoListConfigurator()
-        let vc = CryptoListViewController(configurator: configurator)
-        viewController?.navigationController?.viewControllers = [vc]
+        let tabBarController = MainTabBarController()
+        viewController?.view.window?.rootViewController = tabBarController
     }
 }

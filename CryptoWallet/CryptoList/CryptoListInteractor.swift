@@ -9,6 +9,7 @@ import Foundation
 
 protocol CryptoListBusinessProcessable: AnyObject {
     func loadData()
+    func logout()
 }
 
 class CryptoListInteractor: CryptoListBusinessProcessable {
@@ -31,5 +32,11 @@ class CryptoListInteractor: CryptoListBusinessProcessable {
                 self.presenter.presentError(responce: responce)
             }
         }
+    }
+    
+    func logout() {
+        let authStorage = AuthStorage.shared
+        authStorage.isAuthorized = false
+        presenter.presentLoginRequired()
     }
 }

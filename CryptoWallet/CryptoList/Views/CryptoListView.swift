@@ -11,6 +11,9 @@ import UIKit
 class CryptoListView: UIView {
     var currencies: [CryptoListModel.CellViewModel] = []
     
+    let headerView = CryptoListHeaderView()
+    let tableHeaderView = CryptoListTableHeaderView()
+    
     let activityIndicator: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .large)
         view.hidesWhenStopped = true
@@ -40,7 +43,13 @@ class CryptoListView: UIView {
     func setupViews() {
         backgroundColor = .systemPink
         addSubview(activityIndicator)
+        addSubview(headerView)
         addSubview(tableView)
+        
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        tableHeaderView.frame.size.height = 70
+        tableView.tableHeaderView = tableHeaderView
+        
     }
     
     func activateConstraints() {
@@ -48,15 +57,21 @@ class CryptoListView: UIView {
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 100),
+            headerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            headerView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            headerView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 258),
+            
+            tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             tableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
         ])
     }
     
-    func setTableDelegates(datasource: UITableViewDataSource) {
+    func setNeededDelegates(datasource: UITableViewDataSource, delegate: CryptoListHeaderButtonProtocol) {
         tableView.dataSource = datasource
+        headerView.delegate = delegate
     }
     
     func updateCurrencies() {
