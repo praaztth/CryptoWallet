@@ -44,12 +44,12 @@ class CryptoListTableHeaderView: UIView {
     }
     
     func buildMenu() -> UIMenu {
-        let descendingItem = UIAction(title: "По убыванию цены", state: .on) { _ in
-            print("нажато по убыванию")
+        let descendingItem = UIAction(title: "По убыванию цены", state: .on) { [weak self] _ in
+            self?.delegate?.sortByDescendingButtonTapped()
         }
         
-        let ascendingItem = UIAction(title: "По возрастанию цены") { _ in
-            print("нажато по возрастанию")
+        let ascendingItem = UIAction(title: "По возрастанию цены") { [weak self] _ in
+            self?.delegate?.sortByAscendingButtonTapped()
         }
         
         let menu = UIMenu(options: .singleSelection, children: [descendingItem, ascendingItem])
@@ -68,5 +68,9 @@ class CryptoListTableHeaderView: UIView {
             button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             button.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+    }
+    
+    func clearButtonMenuSelection() {
+        button.menu = buildMenu()
     }
 }

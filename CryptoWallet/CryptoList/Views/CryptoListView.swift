@@ -75,6 +75,7 @@ class CryptoListView: UIView {
     
     func setNeededDelegates(datasource: UITableViewDataSource, delegate: CryptoListHeaderButtonProtocol) {
         tableView.dataSource = datasource
+        tableHeaderView.delegate = delegate
         headerView.delegate = delegate
     }
     
@@ -90,5 +91,9 @@ class CryptoListView: UIView {
     func stopLoading() {
         activityIndicator.stopAnimating()
         tableView.isHidden = false
+    }
+    
+    func clearSortingSelection() {
+        tableHeaderView.clearButtonMenuSelection()
     }
 }

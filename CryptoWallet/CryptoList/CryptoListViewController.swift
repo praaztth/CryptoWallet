@@ -16,6 +16,8 @@ protocol CryptoListDisplayProcessable: AnyObject {
 protocol CryptoListHeaderButtonProtocol: AnyObject {
     func updateButtonTapped()
     func logoutButtonTapped()
+    func sortByAscendingButtonTapped()
+    func sortByDescendingButtonTapped()
 }
 
 class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
@@ -95,9 +97,20 @@ extension CryptoListViewController: UITableViewDataSource {
 extension CryptoListViewController: CryptoListHeaderButtonProtocol {
     func updateButtonTapped() {
         loadData()
+        cryptoListView.clearSortingSelection()
     }
     
     func logoutButtonTapped() {
         interactor?.logout()
+    }
+    
+    func sortByAscendingButtonTapped() {
+        let request = CryptoListModel.Request(isSortByAscending: true, cells: currencies)
+        interactor?.sort(request: request)
+    }
+    
+    func sortByDescendingButtonTapped() {
+        let request = CryptoListModel.Request(isSortByAscending: false, cells: currencies)
+        interactor?.sort(request: request)
     }
 }

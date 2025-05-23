@@ -23,7 +23,7 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
     }
     
     func presentSuccess(responce: CryptoListModel.Responce) {
-        guard let currencies = responce.metricts else { return }
+        guard let currencies = responce.metrics else { return }
         let cellViewModels = currencies.map { currency in
             let name = currency.data.name
             let symbol = currency.data.symbol

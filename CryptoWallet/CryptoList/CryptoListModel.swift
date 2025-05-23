@@ -8,14 +8,17 @@
 import Foundation
 
 struct CryptoListModel {
+    struct Request {
+        let isSortByAscending: Bool
+        let cells: [CryptoListModel.CellViewModel]
+    }
+    
     struct Responce {
-        let isSuccess: Bool
-        let metricts: [Metrics]?
+        let metrics: [Metrics]?
         let error: NetworkServiceError?
         
-        init(isSuccess: Bool, metricts: [Metrics]? = nil, error: NetworkServiceError? = nil) {
-            self.isSuccess = isSuccess
-            self.metricts = metricts
+        init(metrics: [Metrics]? = nil, error: NetworkServiceError? = nil) {
+            self.metrics = metrics
             self.error = error
         }
     }
