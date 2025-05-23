@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class CryptoListView: UIView {
+    var currencies: [CryptoListModel.CellViewModel] = []
+    
     let activityIndicator: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .large)
         view.hidesWhenStopped = true
@@ -16,8 +18,17 @@ class CryptoListView: UIView {
         return view
     }()
     
+    let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .systemGroupedBackground
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "simpleCell")
+        return tableView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         setupViews()
         activateConstraints()
     }
@@ -27,22 +38,38 @@ class CryptoListView: UIView {
     }
     
     func setupViews() {
-        backgroundColor = .systemGroupedBackground
+        backgroundColor = .systemPink
         addSubview(activityIndicator)
+        addSubview(tableView)
     }
     
     func activateConstraints() {
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 100),
+            tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            tableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            tableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
         ])
+    }
+    
+    func setTableDelegates(datasource: UITableViewDataSource) {
+        tableView.dataSource = datasource
+    }
+    
+    func updateCurrencies() {
+        tableView.reloadData()
     }
     
     func startLoading() {
         activityIndicator.startAnimating()
+        tableView.isHidden = true
     }
     
     func stopLoading() {
         activityIndicator.stopAnimating()
+        tableView.isHidden = false
     }
 }

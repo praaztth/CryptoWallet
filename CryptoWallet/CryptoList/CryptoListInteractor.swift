@@ -22,7 +22,14 @@ class CryptoListInteractor: CryptoListBusinessProcessable {
     
     func loadData() {
         worker.fetchData { result in
-            print(result)
+            switch result {
+            case .success(let results):
+                let responce = CryptoListModel.Responce(isSuccess: true, metricts: results)
+                self.presenter.presentSuccess(responce: responce)
+            case .failure(let error):
+                let responce = CryptoListModel.Responce(isSuccess: false, error: error)
+                self.presenter.presentError(responce: responce)
+            }
         }
     }
 }

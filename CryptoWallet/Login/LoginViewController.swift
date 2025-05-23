@@ -10,7 +10,7 @@ import UIKit
 
 protocol LoginDisplayProcessable: AnyObject {
     func showLoginSuccess()
-    func showLoginFailure(viewModel: Model.ViewModel)
+    func showLoginFailure(viewModel: LoginModel.ViewModel)
 }
 
 protocol LoginDelegate: AnyObject {
@@ -55,7 +55,7 @@ class LoginViewController: UIViewController, LoginDisplayProcessable, LoginDeleg
     
     func buttonTapped() {
         loginView.desableControls()
-        let request = Model.Request(username: loginView.username, password: loginView.password)
+        let request = LoginModel.Request(username: loginView.username, password: loginView.password)
         interactor?.login(request: request)
     }
     
@@ -63,7 +63,7 @@ class LoginViewController: UIViewController, LoginDisplayProcessable, LoginDeleg
         router?.routeToCryptoList()
     }
     
-    func showLoginFailure(viewModel: Model.ViewModel) {
+    func showLoginFailure(viewModel: LoginModel.ViewModel) {
         let alert = UIAlertController(title: "Не удалось войти", message: viewModel.errorMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Повторить", style: .default) { _ in
             print("Повторить")

@@ -9,12 +9,31 @@ import Foundation
 
 struct CryptoListModel {
     struct Responce {
-        let metricts: Metrics
+        let isSuccess: Bool
+        let metricts: [Metrics]?
+        let error: NetworkServiceError?
+        
+        init(isSuccess: Bool, metricts: [Metrics]? = nil, error: NetworkServiceError? = nil) {
+            self.isSuccess = isSuccess
+            self.metricts = metricts
+            self.error = error
+        }
+    }
+    
+    struct ViewModel {
+        let cellViewModels: [CellViewModel]
+    }
+    
+    struct CellViewModel {
+        let name: String
+        let symbol: String
+        let price: String
+        let iconName: String
+        let percentChange: String
     }
 }
 
 struct Metrics: Decodable {
-//    let status: Status
     let data: DataObject
 }
 

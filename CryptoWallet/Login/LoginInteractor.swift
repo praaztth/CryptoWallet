@@ -8,7 +8,7 @@
 import Foundation
 
 protocol LoginBusinessProcessable: AnyObject {
-    func login(request: Model.Request)
+    func login(request: LoginModel.Request)
 }
 
 class LoginInteractor: LoginBusinessProcessable {
@@ -22,7 +22,7 @@ class LoginInteractor: LoginBusinessProcessable {
         self.authStorage = authStorage
     }
     
-    func login(request: Model.Request) {
+    func login(request: LoginModel.Request) {
         let username = request.username
         let password = request.password
         
@@ -31,7 +31,7 @@ class LoginInteractor: LoginBusinessProcessable {
                 authStorage.isAuthorized = true
                 self.presenter.presentLoginSuccess()
             } else {
-                let responce = Model.Responce(message: message ?? "")
+                let responce = LoginModel.Responce(message: message ?? "")
                 self.presenter.presentLoginFailure(responce: responce)
             }
         }

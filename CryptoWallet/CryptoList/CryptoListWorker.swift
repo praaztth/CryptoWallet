@@ -8,13 +8,13 @@
 import Foundation
 
 protocol CryptoListWorkingProcessable {
-    func fetchData(completion: @escaping (Result<Metrics, NetworkServiceError>) -> Void)
+    func fetchData(completion: @escaping (Result<[Metrics], NetworkServiceError>) -> Void)
 }
 
 class CryptoListWorker: CryptoListWorkingProcessable {
     let service = NetworkService.shared
     
-    func fetchData(completion: @escaping (Result<Metrics, NetworkServiceError>) -> Void) {
+    func fetchData(completion: @escaping (Result<[Metrics], NetworkServiceError>) -> Void) {
         service.fetchCryptoCurrencies { result in
             completion(result)
         }

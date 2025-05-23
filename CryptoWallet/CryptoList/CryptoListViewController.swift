@@ -9,11 +9,13 @@ import Foundation
 import UIKit
 
 protocol CryptoListDisplayProcessable: AnyObject {
-    
+    func displayCurrencies(viewModel: CryptoListModel.ViewModel)
 }
 
 class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     let cryptoListView = CryptoListView()
+    
+    var currencies: [CryptoListModel.CellViewModel] = []
     
     var router: CryptoListRoutingProcessable?
     var interactor: CryptoListBusinessProcessable?
@@ -34,6 +36,8 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        cryptoListView.setTableDelegates(datasource: self)
+        
         title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -46,4 +50,25 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
         cryptoListView.startLoading()
         interactor?.loadData()
     }
+    
+    func displayCurrencies(viewModel: CryptoListModel.ViewModel) {
+        currencies = viewModel.cellViewModels
+        cryptoListView.updateCurrencies()
+        cryptoListView.stopLoading()
+    }
+}
+
+extension CryptoListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return currencies.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "simpleCell", for: indexPath)
+        cell.textLabel?.text = currencies[indexPath.row].name
+        
+        return cell
+    }
+    
+    
 }

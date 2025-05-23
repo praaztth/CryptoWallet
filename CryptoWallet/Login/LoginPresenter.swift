@@ -9,7 +9,7 @@ import Foundation
 
 protocol LoginPresentationProcessable: AnyObject {
     func presentLoginSuccess()
-    func presentLoginFailure(responce: Model.Responce)
+    func presentLoginFailure(responce: LoginModel.Responce)
 }
 
 class LoginPresenter: LoginPresentationProcessable {
@@ -23,7 +23,7 @@ class LoginPresenter: LoginPresentationProcessable {
         viewController?.showLoginSuccess()
     }
     
-    func presentLoginFailure(responce: Model.Responce) {
+    func presentLoginFailure(responce: LoginModel.Responce) {
         var errorMessage: String = ""
         
         switch responce.message {
@@ -33,7 +33,7 @@ class LoginPresenter: LoginPresentationProcessable {
             errorMessage = "Что-то пошло не так..."
         }
         
-        let viewModel = Model.ViewModel(errorMessage: errorMessage)
+        let viewModel = LoginModel.ViewModel(errorMessage: errorMessage)
         viewController?.showLoginFailure(viewModel: viewModel)
     }
 }
