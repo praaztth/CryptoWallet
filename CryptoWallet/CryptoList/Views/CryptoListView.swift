@@ -9,8 +9,6 @@ import Foundation
 import UIKit
 
 class CryptoListView: UIView {
-    var currencies: [CryptoListModel.CellViewModel] = []
-    
     let headerView = CryptoListHeaderView()
     let tableHeaderView = CryptoListTableHeaderView()
     
@@ -45,7 +43,7 @@ class CryptoListView: UIView {
     }
     
     func setupViews() {
-        backgroundColor = .systemPink
+        backgroundColor = .primaryBackground
         addSubview(activityIndicator)
         addSubview(headerView)
         addSubview(tableView)
@@ -73,10 +71,11 @@ class CryptoListView: UIView {
         ])
     }
     
-    func setNeededDelegates(datasource: UITableViewDataSource, delegate: CryptoListHeaderButtonProtocol) {
-        tableView.dataSource = datasource
-        tableHeaderView.delegate = delegate
-        headerView.delegate = delegate
+    func setNeededDelegates(tableDatasource: UITableViewDataSource, tableDelegate: UITableViewDelegate, buttonDelegate: CryptoListHeaderButtonProtocol) {
+        tableView.dataSource = tableDatasource
+        tableView.delegate = tableDelegate
+        tableHeaderView.delegate = buttonDelegate
+        headerView.delegate = buttonDelegate
     }
     
     func updateCurrencies() {

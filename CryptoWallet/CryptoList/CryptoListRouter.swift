@@ -9,6 +9,7 @@ import Foundation
 
 protocol CryptoListRoutingProcessable: AnyObject {
     func routeToLogin()
+    func routeToCryptoInfo(currency: CryptoListModel.CellViewModel)
 }
 
 class CryptoListRouter: CryptoListRoutingProcessable {
@@ -23,5 +24,11 @@ class CryptoListRouter: CryptoListRoutingProcessable {
         let configurator = LoginConfigurator(authStorage: authStorage)
         let vc = LoginViewController(configurator: configurator)
         viewController?.view.window?.rootViewController = vc
+    }
+    
+    func routeToCryptoInfo(currency: CryptoListModel.CellViewModel) {
+        let configurator = CryptoInfoConfigurator()
+        let vc = CryptoInfoViewController(configurator: configurator, viewModel: currency)
+        viewController?.navigationController?.pushViewController(vc, animated: true)
     }
 }

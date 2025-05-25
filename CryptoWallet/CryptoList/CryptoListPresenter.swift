@@ -35,13 +35,16 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
             let percentChange = formatPercentChange(percentChange: percentChangeDouble)
             
             var iconName = ""
+            var iconColor: PercentColor?
             if percentChangeDouble > 0 {
                 iconName = "chevron.up"
+                iconColor = .green
             } else {
                 iconName = "chevron.down"
+                iconColor = .red
             }
             
-            return CryptoListModel.CellViewModel(name: name, symbol: symbol, price: price, iconName: iconName, percentChange: percentChange)
+            return CryptoListModel.CellViewModel(name: name, symbol: symbol, price: price, iconName: iconName, iconColor: iconColor ?? .green, percentChange: percentChange)
         }
         
         let viewModel = CryptoListModel.ViewModel(cellViewModels: cellViewModels)

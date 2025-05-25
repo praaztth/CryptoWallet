@@ -32,6 +32,7 @@ struct CryptoListModel {
         let symbol: String
         let price: String
         let iconName: String
+        let iconColor: PercentColor
         let percentChange: String
     }
 }

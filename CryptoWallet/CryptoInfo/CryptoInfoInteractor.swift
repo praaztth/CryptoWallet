@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+protocol CryptoInfoBusinessProcessable: AnyObject {
+    
+}
+
+class CryptoInfoInteractor: CryptoInfoBusinessProcessable {
+    var presenter: CryptoInfoPresentationProcessable
+    
+    init(presenter: CryptoInfoPresentationProcessable) {
+        self.presenter = presenter
+    }
+}

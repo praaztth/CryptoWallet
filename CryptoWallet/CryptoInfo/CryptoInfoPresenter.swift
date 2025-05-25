@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+protocol CryptoInfoPresentationProcessable: AnyObject {
+    
+}
+
+class CryptoInfoPresenter: CryptoInfoPresentationProcessable {
+    weak var viewController: CryptoInfoViewController?
+    
+    init(viewController: CryptoInfoViewController? = nil) {
+        self.viewController = viewController
+    }
+}

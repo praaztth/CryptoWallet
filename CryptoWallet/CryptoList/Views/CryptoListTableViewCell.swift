@@ -11,7 +11,7 @@ import UIKit
 class CryptoListTableViewCell: UITableViewCell {
     let nameLabel = UILabel()
     let priceLabel = UILabel()
-    let percentChangeLabel = UILabel()
+    let percentView = CryptoInfoPercentChangeView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -24,10 +24,10 @@ class CryptoListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(name: String, price: String, percentChange: String) {
+    func configure(name: String, price: String, percentChange: String, iconName: String, iconColor: UIColor) {
         nameLabel.text = name
         priceLabel.text = price
-        percentChangeLabel.text = percentChange
+        percentView.configure(percent: percentChange, iconName: iconName, iconColor: iconColor)
     }
     
     func setupViews() {
@@ -35,9 +35,10 @@ class CryptoListTableViewCell: UITableViewCell {
         
         nameLabel.applyTableViewCellTitle()
         priceLabel.applyTableViewCellTitle()
-        percentChangeLabel.applyTableViewCellSubtitle()
         
-        [nameLabel, priceLabel, percentChangeLabel].forEach { view in
+        percentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        [nameLabel, priceLabel, percentView].forEach { view in
             addSubview(view)
         }
     }
@@ -48,8 +49,8 @@ class CryptoListTableViewCell: UITableViewCell {
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             priceLabel.topAnchor.constraint(equalTo: topAnchor),
             priceLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            percentChangeLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 3),
-            percentChangeLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+            percentView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 3),
+            percentView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 }

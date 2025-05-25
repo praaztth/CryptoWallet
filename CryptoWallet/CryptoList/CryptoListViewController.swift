@@ -23,7 +23,7 @@ protocol CryptoListHeaderButtonProtocol: AnyObject {
 class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     let cryptoListView = CryptoListView()
     
-    var currencies: [CryptoListModel.CellViewModel] = []
+    var viewModel: CryptoListModel.ViewModel?
     
     var router: CryptoListRoutingProcessable?
     var interactor: CryptoListBusinessProcessable?
@@ -44,17 +44,11 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cryptoListView.setNeededDelegates(datasource: self, delegate: self)
-        
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle.fill"), style: .plain, target: self, action: nil)
-        rightButton.tintColor = .black
-        navigationItem.rightBarButtonItem = rightButton
+        cryptoListView.setNeededDelegates(tableDatasource: self, tableDelegate: self, buttonDelegate: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
+        navigationController?.isNavigationBarHidden = true
         loadData()
     }
     
@@ -64,7 +58,7 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     }
     
     func displayCurrencies(viewModel: CryptoListModel.ViewModel) {
-        currencies = viewModel.cellViewModels
+        self.viewModel = viewModel
         cryptoListView.updateCurrencies()
         cryptoListView.stopLoading()
     }
@@ -76,21 +70,32 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
 
 extension CryptoListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currencies.count
+        return viewModel?.cellViewModels.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CryptoListTableViewCell", for: indexPath) as? CryptoListTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CryptoListTableViewCell", for: indexPath) as? CryptoListTableViewCell,
+              let item = viewModel?.cellViewModels[indexPath.row] else {
             return UITableViewCell(frame: .zero)
         }
         
-        let item = currencies[indexPath.row]
         let name = item.name
         let price = item.price
         let percentChange = item.percentChange
-        cell.configure(name: name, price: price, percentChange: percentChange)
+        let iconName = item.iconName
+        let iconColor = item.iconColor
+        cell.configure(name: name, price: price, percentChange: percentChange, iconName: iconName, iconColor: iconColor.color)
         
         return cell
+    }
+}
+
+extension CryptoListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let currency = viewModel?.cellViewModels[indexPath.row] ?? CryptoListModel.CellViewModel(name: "", symbol: "", price: "", iconName: "", iconColor: .green, percentChange: "")
+        router?.routeToCryptoInfo(currency: currency)
     }
 }
 
@@ -105,12 +110,16 @@ extension CryptoListViewController: CryptoListHeaderButtonProtocol {
     }
     
     func sortByAscendingButtonTapped() {
-        let request = CryptoListModel.Request(isSortByAscending: true, cells: currencies)
+        guard let viewModel = viewModel else { return }
+        let currenciesToSort = viewModel.cellViewModels
+        let request = CryptoListModel.Request(isSortByAscending: true, cells: currenciesToSort)
         interactor?.sort(request: request)
     }
     
     func sortByDescendingButtonTapped() {
-        let request = CryptoListModel.Request(isSortByAscending: false, cells: currencies)
+        guard let viewModel = viewModel else { return }
+        let currenciesToSort = viewModel.cellViewModels
+        let request = CryptoListModel.Request(isSortByAscending: false, cells: currenciesToSort)
         interactor?.sort(request: request)
     }
 }

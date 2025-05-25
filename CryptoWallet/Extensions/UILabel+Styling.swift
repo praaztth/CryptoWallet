@@ -20,4 +20,10 @@ extension UILabel {
         self.font = .systemFont(ofSize: 14)
         self.textColor = .gray
     }
+    
+    func applyValueLabel() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.font = .systemFont(ofSize: 14, weight: .bold)
+        self.textColor = .black
+    }
 }

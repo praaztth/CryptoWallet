@@ -6,3 +6,19 @@
 //
 
 import Foundation
+
+protocol CryptoInfoRoutingProcessable: AnyObject {
+    func routeBackToCryptoList()
+}
+
+class CryptoInfoRouter: CryptoInfoRoutingProcessable {
+    weak var viewController: CryptoInfoViewController?
+    
+    init(viewController: CryptoInfoViewController? = nil) {
+        self.viewController = viewController
+    }
+    
+    func routeBackToCryptoList() {
+        viewController?.navigationController?.popViewController(animated: true)
+    }
+}

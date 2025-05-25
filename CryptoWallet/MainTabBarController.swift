@@ -18,18 +18,20 @@ class MainTabBarController: UITabBarController {
     func setupTabs() {
         let configurator = CryptoListConfigurator()
         let cryptoListViewController = CryptoListViewController(configurator: configurator)
+        let nvc = UINavigationController(rootViewController: cryptoListViewController)
+        
         let stub1 = ViewControllerStub()
         let stub2 = ViewControllerStub()
         let stub3 = ViewControllerStub()
         let stub4 = ViewControllerStub()
         
-        cryptoListViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 0)
+        nvc.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 0)
         stub1.tabBarItem = UITabBarItem(tabBarSystemItem: .contacts, tag: 1)
         stub2.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 2)
         stub3.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 3)
         stub4.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 4)
         
-        viewControllers = [cryptoListViewController, stub1, stub2, stub3, stub4]
+        viewControllers = [nvc, stub1, stub2, stub3, stub4]
     }
 }
 

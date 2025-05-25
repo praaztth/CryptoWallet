@@ -30,9 +30,7 @@ class CryptoListHeaderView: UIView {
     }()
     
     let rightButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: "ellipsis.circle.fill")
-        config.baseForegroundColor = .white
+        let config = UIButton.Configuration.round(imageName: "ellipsis.circle.fill")
         
         let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
