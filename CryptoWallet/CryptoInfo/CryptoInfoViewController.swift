@@ -8,22 +8,28 @@
 import Foundation
 import UIKit
 
-protocol CryptoInfoBackButtonProtocol {
+protocol CryptoInfoDisplayProcessable: AnyObject {
+    func displayLoginRequired()
+}
+
+protocol CryptoInfoButtonsProtocol {
     func backButtonTapped()
+    func logoutButtonTapped()
 }
 
 class CryptoInfoViewController: UIViewController {
     let cryptoInfoView = CryptoInfoView()
     
-    var viewModel: CryptoListModel.ViewModel?
+    var viewModel: CryptoListModel.CellViewModel
     
     var router: CryptoInfoRoutingProcessable?
     var interactor: CryptoInfoBusinessProcessable?
     
     init(configurator: CryptoInfoConfigurator, viewModel: CryptoListModel.CellViewModel) {
+        self.viewModel = viewModel
+        
         super.init(nibName: nil, bundle: nil)
         configurator.configure(viewController: self)
-        cryptoInfoView.configure(with: viewModel, delegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -36,11 +42,22 @@ class CryptoInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        cryptoInfoView.configure(with: self.viewModel, delegate: self)
     }
 }
 
-extension CryptoInfoViewController: CryptoInfoBackButtonProtocol {
+extension CryptoInfoViewController: CryptoInfoDisplayProcessable {
+    func displayLoginRequired() {
+        router?.routeToLogin()
+    }
+}
+
+extension CryptoInfoViewController: CryptoInfoButtonsProtocol {
     func backButtonTapped() {
         router?.routeBackToCryptoList()
+    }
+    
+    func logoutButtonTapped() {
+        interactor?.logout()
     }
 }

@@ -55,6 +55,7 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     func loadData() {
         cryptoListView.startLoading()
         interactor?.loadData()
+        cryptoListView.clearSortingSelection()
     }
     
     func displayCurrencies(viewModel: CryptoListModel.ViewModel) {
@@ -94,7 +95,7 @@ extension CryptoListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let currency = viewModel?.cellViewModels[indexPath.row] ?? CryptoListModel.CellViewModel(name: "", symbol: "", price: "", iconName: "", iconColor: .green, percentChange: "")
+        let currency = viewModel?.cellViewModels[indexPath.row] ?? CryptoListModel.CellViewModel(name: "", symbol: "", price: "", iconName: "", iconColor: .green, percentChange: "", marketcap: "", circulatingSupply: "")
         router?.routeToCryptoInfo(currency: currency)
     }
 }
@@ -102,7 +103,6 @@ extension CryptoListViewController: UITableViewDelegate {
 extension CryptoListViewController: CryptoListHeaderButtonProtocol {
     func updateButtonTapped() {
         loadData()
-        cryptoListView.clearSortingSelection()
     }
     
     func logoutButtonTapped() {

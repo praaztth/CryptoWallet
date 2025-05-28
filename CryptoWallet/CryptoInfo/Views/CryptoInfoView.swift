@@ -9,10 +9,17 @@ import Foundation
 import UIKit
 
 class CryptoInfoView: UIView {
-    var delegate: CryptoInfoBackButtonProtocol?
+    var delegate: CryptoInfoButtonsProtocol?
     
     let backButton: UIButton = {
         let config = UIButton.Configuration.round(imageName: "arrow.left.circle.fill")
+        let button = UIButton(configuration: config)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let logoutButton: UIButton = {
+        let config = UIButton.Configuration.round(imageName: "rectangle.portrait.and.arrow.right.fill")
         let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -40,6 +47,9 @@ class CryptoInfoView: UIView {
         stack.alignment = .fill
         stack.distribution = .fillEqually
         stack.backgroundColor = .systemGray4
+        stack.layoutMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.layer.cornerRadius = 30
         return stack
     }()
     
@@ -59,22 +69,24 @@ class CryptoInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with viewModel: CryptoListModel.CellViewModel, delegate: CryptoInfoBackButtonProtocol) {
+    func configure(with viewModel: CryptoListModel.CellViewModel, delegate: CryptoInfoButtonsProtocol) {
         nameLabel.text = viewModel.name + " (\(viewModel.symbol))"
         priceLabel.text = viewModel.price
         percentView.configure(percent: viewModel.percentChange, iconName: viewModel.iconName, iconColor: viewModel.iconColor.color)
-        footerView.configure(marketCapitalization: "$???,???", circulatingSuply: "???.??? ???")
-        
-        percentView.translatesAutoresizingMaskIntoConstraints = false
-        footerView.translatesAutoresizingMaskIntoConstraints = false
+        footerView.configure(marketCapitalization: viewModel.marketcap, circulatingSuply: viewModel.circulatingSupply)
         
         self.delegate = delegate
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
     }
     
     func setupViews() {
+        percentView.translatesAutoresizingMaskIntoConstraints = false
+        footerView.translatesAutoresizingMaskIntoConstraints = false
+        
         [
             backButton,
+            logoutButton,
             nameLabel,
             priceLabel,
             percentView,
@@ -82,10 +94,8 @@ class CryptoInfoView: UIView {
             footerView
         ].forEach { addSubview($0) }
         
-        [
-            "24H", "1W", "1Y", "ALL", "Point"
-        ].forEach { title in
-            let button = makeCustomButton(title: title)
+        let intervalButtons = createIntervalButtons()
+        intervalButtons.forEach { button in
             stackHorizontal.addArrangedSubview(button)
         }
     }
@@ -94,6 +104,8 @@ class CryptoInfoView: UIView {
         NSLayoutConstraint.activate([
             backButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 35),
             backButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 25),
+            logoutButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 35),
+            logoutButton.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -25),
             nameLabel.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
@@ -111,6 +123,21 @@ class CryptoInfoView: UIView {
         ])
     }
     
+    func createIntervalButtons() -> [UIButton] {
+        [
+            "24H", "1W", "1Y", "ALL", "Point"
+        ].map { title in
+            let button = makeCustomButton(title: title)
+            if title == "24H" {
+                button.isSelected = true
+                button.addTarget(self, action: #selector(oneDayButtonTapped), for: .touchUpInside)
+            } else {
+                button.addTarget(self, action: #selector(otherButtonTapped), for: .touchUpInside)
+            }
+            return button
+        }
+    }
+    
     func makeCustomButton(title: String) -> UIButton {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .white
@@ -119,10 +146,33 @@ class CryptoInfoView: UIView {
         let button = UIButton(configuration: config)
         button.titleLabel?.font = .systemFont(ofSize: 14)
         button.setTitle(title, for: .normal)
+        
+        button.configurationUpdateHandler = { button in
+            if button.isSelected {
+                button.configuration?.baseBackgroundColor = .white
+                button.configuration?.baseForegroundColor = .black
+                
+            } else {
+                button.configuration?.baseBackgroundColor = .clear
+                button.configuration?.baseForegroundColor = .systemGray
+            }
+        }
         return button
     }
     
     @objc func backButtonTapped() {
         delegate?.backButtonTapped()
+    }
+    
+    @objc func logoutButtonTapped() {
+        delegate?.logoutButtonTapped()
+    }
+    
+    @objc func oneDayButtonTapped(_ sender: UIButton) {
+        sender.isSelected = true
+    }
+    
+    @objc func otherButtonTapped(_ sender: UIButton) {
+        sender.isSelected = false
     }
 }

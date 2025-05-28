@@ -34,6 +34,8 @@ struct CryptoListModel {
         let iconName: String
         let iconColor: PercentColor
         let percentChange: String
+        let marketcap: String
+        let circulatingSupply: String
     }
 }
 
@@ -49,12 +51,22 @@ struct DataObject: Decodable {
     let symbol: String
     let name: String
     let market_data: MarketData
+    let marketcap: MarketCapitalization
+    let supply: CirculatingSupply
     let roi_data: RoiData
 }
 
 struct MarketData: Decodable {
     let price_usd: Double
     let percent_change_usd_last_24_hours: Double
+}
+
+struct MarketCapitalization: Decodable {
+    let current_marketcap_usd: Double
+}
+
+struct CirculatingSupply: Decodable {
+    let circulating: Double
 }
 
 struct RoiData: Decodable {

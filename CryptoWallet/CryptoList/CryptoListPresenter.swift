@@ -29,7 +29,7 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
             let symbol = currency.data.symbol
             
             let priceDouble = currency.data.market_data.price_usd
-            let price = formatPrice(price: priceDouble) ?? "???"
+            let price = formatPrice(price: priceDouble, fractionDigits: 2) ?? "???"
             
             let percentChangeDouble = currency.data.market_data.percent_change_usd_last_24_hours
             let percentChange = formatPercentChange(percentChange: percentChangeDouble)
@@ -44,7 +44,10 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
                 iconColor = .red
             }
             
-            return CryptoListModel.CellViewModel(name: name, symbol: symbol, price: price, iconName: iconName, iconColor: iconColor ?? .green, percentChange: percentChange)
+            let marketcap = formatPrice(price: currency.data.marketcap.current_marketcap_usd, fractionDigits: 0) ?? "???"
+            let circulatingSupply = formatCirculationSupply(circulationSupply: currency.data.supply.circulating, symbol: symbol)
+            
+            return CryptoListModel.CellViewModel(name: name, symbol: symbol, price: price, iconName: iconName, iconColor: iconColor ?? .green, percentChange: percentChange, marketcap: marketcap, circulatingSupply: circulatingSupply)
         }
         
         let viewModel = CryptoListModel.ViewModel(cellViewModels: cellViewModels)
@@ -59,11 +62,11 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
         viewController?.displayLoginRequired()
     }
     
-    func formatPrice(price: Double) -> String? {
+    func formatPrice(price: Double, fractionDigits: Int) -> String? {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = fractionDigits
+        formatter.minimumFractionDigits = fractionDigits
         formatter.locale = Locale(identifier: "en_US")
         
         let formattedString = formatter.string(from: NSNumber(value: price))
@@ -73,5 +76,9 @@ class CryptoListPresenter: CryptoListPresentationProcessable {
     func formatPercentChange(percentChange: Double) -> String {
         let formattedString = String(format: "%.1f%%", percentChange)
         return formattedString
+    }
+    
+    func formatCirculationSupply(circulationSupply: Double, symbol: String) -> String {
+        return "\(circulationSupply.description) \(symbol)"
     }
 }

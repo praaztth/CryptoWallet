@@ -9,6 +9,7 @@ import Foundation
 
 protocol CryptoInfoRoutingProcessable: AnyObject {
     func routeBackToCryptoList()
+    func routeToLogin()
 }
 
 class CryptoInfoRouter: CryptoInfoRoutingProcessable {
@@ -20,5 +21,12 @@ class CryptoInfoRouter: CryptoInfoRoutingProcessable {
     
     func routeBackToCryptoList() {
         viewController?.navigationController?.popViewController(animated: true)
+    }
+    
+    func routeToLogin() {
+        let authStorage = AuthStorage.shared
+        let configurator = LoginConfigurator(authStorage: authStorage)
+        let vc = LoginViewController(configurator: configurator)
+        viewController?.view.window?.rootViewController = vc
     }
 }

@@ -55,7 +55,19 @@ class CryptoListInteractor: CryptoListBusinessProcessable {
         let metrics = request.cells.map { cell in
             let price = formatStringPriceToDouble(stringPrice: cell.price) ?? 0
             let percent = formatStringPercentToDouble(stringPercent: cell.percentChange) ?? 0
-            return Metrics(data: DataObject(symbol: cell.symbol, name: cell.name, market_data: MarketData(price_usd: price, percent_change_usd_last_24_hours: percent), roi_data: RoiData(percent_change_last_1_week: percent, percent_change_last_1_year: percent)))
+            let marketcap = formatStringPriceToDouble(stringPrice: cell.marketcap) ?? 0
+            let supply = Double(cell.circulatingSupply) ?? 0
+            return Metrics(data:
+                            DataObject(symbol: cell.symbol,
+                                       name: cell.name,
+                                       market_data:
+                                        MarketData(price_usd: price,
+                                                   percent_change_usd_last_24_hours: percent),
+                                       marketcap: MarketCapitalization(current_marketcap_usd: marketcap),
+                                       supply: CirculatingSupply(circulating: supply),
+                                       roi_data: RoiData(percent_change_last_1_week: percent,
+                                                         percent_change_last_1_year: percent))
+            )
         }
         
         let isAscending = request.isSortByAscending

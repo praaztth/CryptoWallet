@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CryptoInfoPresentationProcessable: AnyObject {
-    
+    func presentLoginRequired()
 }
 
 class CryptoInfoPresenter: CryptoInfoPresentationProcessable {
@@ -16,5 +16,9 @@ class CryptoInfoPresenter: CryptoInfoPresentationProcessable {
     
     init(viewController: CryptoInfoViewController? = nil) {
         self.viewController = viewController
+    }
+    
+    func presentLoginRequired() {
+        viewController?.displayLoginRequired()
     }
 }

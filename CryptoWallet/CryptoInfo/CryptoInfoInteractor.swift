@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CryptoInfoBusinessProcessable: AnyObject {
-    
+    func logout()
 }
 
 class CryptoInfoInteractor: CryptoInfoBusinessProcessable {
@@ -16,5 +16,11 @@ class CryptoInfoInteractor: CryptoInfoBusinessProcessable {
     
     init(presenter: CryptoInfoPresentationProcessable) {
         self.presenter = presenter
+    }
+    
+    func logout() {
+        let authStorage = AuthStorage.shared
+        authStorage.isAuthorized = false
+        presenter.presentLoginRequired()
     }
 }

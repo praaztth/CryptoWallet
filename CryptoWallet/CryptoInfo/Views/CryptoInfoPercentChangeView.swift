@@ -15,9 +15,9 @@ enum PercentColor {
     var color: UIColor {
         switch self {
         case .green:
-            UIColor.green
+            UIColor.systemGreen
         case .red:
-            UIColor.red
+            UIColor.systemRed
         }
     }
 }
@@ -44,6 +44,7 @@ class CryptoInfoPercentChangeView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14)
         label.textColor = .systemGray
+        label.numberOfLines = 0
         return label
     }()
     
@@ -54,8 +55,15 @@ class CryptoInfoPercentChangeView: UIView {
         stackView.addArrangedSubview(imageView)
         stackView.addArrangedSubview(label)
         
-        stackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+//        stackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.leftAnchor.constraint(equalTo: leftAnchor),
+            stackView.rightAnchor.constraint(equalTo: rightAnchor)
+        ])
     }
     
     func configure(percent: String, iconName: String, iconColor: UIColor) {
@@ -65,6 +73,12 @@ class CryptoInfoPercentChangeView: UIView {
         label.text = percent
         
         layoutIfNeeded()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        print()
     }
     
     required init?(coder: NSCoder) {
