@@ -69,7 +69,7 @@ class CryptoInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with viewModel: CryptoListModel.CellViewModel, delegate: CryptoInfoButtonsProtocol) {
+    func configure(with viewModel: CryptoListModel.Currencies.CellViewModel, delegate: CryptoInfoButtonsProtocol) {
         nameLabel.text = viewModel.name + " (\(viewModel.symbol))"
         priceLabel.text = viewModel.price
         percentView.configure(percent: viewModel.percentChange, iconName: viewModel.iconName, iconColor: viewModel.iconColor.color)

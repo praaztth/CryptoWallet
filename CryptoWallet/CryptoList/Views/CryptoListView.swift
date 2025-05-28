@@ -19,6 +19,13 @@ class CryptoListView: UIView {
         return view
     }()
     
+    let imageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "illustration_other"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -45,6 +52,7 @@ class CryptoListView: UIView {
     func setupViews() {
         backgroundColor = .primaryBackground
         addSubview(activityIndicator)
+        addSubview(imageView)
         addSubview(headerView)
         addSubview(tableView)
         
@@ -58,6 +66,11 @@ class CryptoListView: UIView {
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 101),
+            imageView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 189),
+            imageView.heightAnchor.constraint(equalToConstant: 242),
+            imageView.widthAnchor.constraint(equalToConstant: 242),
             
             headerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             headerView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
@@ -80,6 +93,14 @@ class CryptoListView: UIView {
     
     func updateCurrencies() {
         tableView.reloadData()
+    }
+    
+    func setCurrencyImage(for indexPath: IndexPath, image: UIImage) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? CryptoListTableViewCell else {
+            return
+        }
+        
+        cell.setImage(image: image)
     }
     
     func startLoading() {

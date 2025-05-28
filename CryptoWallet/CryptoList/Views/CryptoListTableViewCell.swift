@@ -11,7 +11,34 @@ import UIKit
 class CryptoListTableViewCell: UITableViewCell {
     let nameLabel = UILabel()
     let priceLabel = UILabel()
+    let symbolLabel = UILabel()
     let percentView = CryptoInfoPercentChangeView()
+    
+    let imageCurrencyView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = 25
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    let pricePercentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 3
+        stackView.alignment = .trailing
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
+    var isImageLoaded = false
+    
+    override func prepareForReuse() {
+        imageCurrencyView.image = UIImage(systemName: "circle.dotted")
+        isImageLoaded = false
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -24,10 +51,12 @@ class CryptoListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(name: String, price: String, percentChange: String, iconName: String, iconColor: UIColor) {
+    func configure(name: String, symbol: String, price: String, percentChange: String, iconName: String, iconColor: UIColor) {
         nameLabel.text = name
+        symbolLabel.text = symbol
         priceLabel.text = price
         percentView.configure(percent: percentChange, iconName: iconName, iconColor: iconColor)
+        imageCurrencyView.image = UIImage(systemName: "circle.dotted")
     }
     
     func setupViews() {
@@ -35,22 +64,37 @@ class CryptoListTableViewCell: UITableViewCell {
         
         nameLabel.applyTableViewCellTitle()
         priceLabel.applyTableViewCellTitle()
+        symbolLabel.applyTableViewCellSubtitle()
         
         percentView.translatesAutoresizingMaskIntoConstraints = false
         
-        [nameLabel, priceLabel, percentView].forEach { view in
-            addSubview(view)
-        }
+        addSubview(nameLabel)
+        addSubview(symbolLabel)
+        addSubview(pricePercentStackView)
+        addSubview(imageCurrencyView)
+        
+        pricePercentStackView.addArrangedSubview(priceLabel)
+        pricePercentStackView.addArrangedSubview(percentView)
+    }
+    
+    func setImage(image: UIImage) {
+        imageCurrencyView.image = image
+        isImageLoaded = true
     }
     
     func activateContraints() {
         NSLayoutConstraint.activate([
-            nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            priceLabel.topAnchor.constraint(equalTo: topAnchor),
-            priceLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            percentView.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 3),
-            percentView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            imageCurrencyView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageCurrencyView.leftAnchor.constraint(equalTo: leftAnchor),
+            imageCurrencyView.heightAnchor.constraint(equalToConstant: 50),
+            imageCurrencyView.widthAnchor.constraint(equalToConstant: 50),
+            nameLabel.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: imageCurrencyView.trailingAnchor, constant: 19),
+            pricePercentStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            pricePercentStackView.rightAnchor.constraint(equalTo: rightAnchor),
+            
+            symbolLabel.centerYAnchor.constraint(equalTo: percentView.centerYAnchor),
+            symbolLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor)
         ])
     }
 }

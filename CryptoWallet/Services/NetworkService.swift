@@ -78,8 +78,30 @@ class NetworkService: NetworkServiceProtocol {
         }
     }
     
+    func fetchCurrencyImageData(id: String, completion: @escaping (Result<Data, NetworkServiceError>) -> Void) {
+        guard let url = currencyImageURL(currencyId: id) else {
+            let error = NetworkServiceError.invalidURL
+            completion(.failure(error))
+            return
+        }
+        
+        DispatchQueue.global(qos: .utility).async {
+            do {
+                let imageData = try Data(contentsOf: url)
+                completion(.success(imageData))
+            } catch {
+                completion(.failure(NetworkServiceError.requestFailed(error.localizedDescription)))
+            }
+        }
+    }
+    
     func currencyURL(currency: String) -> URL? {
         let url = URL(string: "\(Constants.apiURL)/\(currency)/metrics")
+        return url
+    }
+    
+    func currencyImageURL(currencyId: String) -> URL? {
+        let url = URL(string: "\(Constants.imageURL)/\(currencyId)/64.png")
         return url
     }
 }

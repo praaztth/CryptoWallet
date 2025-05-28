@@ -10,7 +10,8 @@ import Foundation
 protocol CryptoListBusinessProcessable: AnyObject {
     func loadData()
     func logout()
-    func sort(request: CryptoListModel.Request)
+    func sort(request: CryptoListModel.SortRequest)
+    func loadCurrencyImage(request: CryptoListModel.ImageFetching.Request)
 }
 
 class CryptoListInteractor: CryptoListBusinessProcessable {
@@ -27,11 +28,33 @@ class CryptoListInteractor: CryptoListBusinessProcessable {
             switch result {
             case .success(let results):
                 let sortedResults = self.sortResults(results: results, isAscending: false)
-                let responce = CryptoListModel.Responce(metrics: sortedResults)
+                let responce = CryptoListModel.Currencies.Responce(metrics: sortedResults)
                 self.presenter.presentSuccess(responce: responce)
             case .failure(let error):
-                let responce = CryptoListModel.Responce(error: error)
+                let responce = CryptoListModel.Currencies.Responce(error: error)
                 self.presenter.presentError(responce: responce)
+            }
+        }
+    }
+    
+    func loadCurrencyImage(request: CryptoListModel.ImageFetching.Request) {
+        let id = request.id
+        let index = request.index
+        
+        worker.fetchImageData(id: id) { [weak self] result in
+            switch result {
+            case .success(let result):
+                let responce = CryptoListModel.ImageFetching.Responce(data: result, index: index)
+                DispatchQueue.main.async {
+                    self?.presenter.presentCurrencyImage(responce: responce)
+                }
+                
+            case .failure(let error):
+                print("ERROR: \(#function), \(error)")
+                let responce = CryptoListModel.ImageFetching.Responce(data: nil, index: index)
+                DispatchQueue.main.async {
+                    self?.presenter.presentCurrencyImage(responce: responce)
+                }
             }
         }
     }
@@ -51,14 +74,15 @@ class CryptoListInteractor: CryptoListBusinessProcessable {
         presenter.presentLoginRequired()
     }
     
-    func sort(request: CryptoListModel.Request) {
+    func sort(request: CryptoListModel.SortRequest) {
         let metrics = request.cells.map { cell in
             let price = formatStringPriceToDouble(stringPrice: cell.price) ?? 0
             let percent = formatStringPercentToDouble(stringPercent: cell.percentChange) ?? 0
             let marketcap = formatStringPriceToDouble(stringPrice: cell.marketcap) ?? 0
             let supply = Double(cell.circulatingSupply) ?? 0
             return Metrics(data:
-                            DataObject(symbol: cell.symbol,
+                            DataObject(id: cell.id,
+                                       symbol: cell.symbol,
                                        name: cell.name,
                                        market_data:
                                         MarketData(price_usd: price,
@@ -73,7 +97,7 @@ class CryptoListInteractor: CryptoListBusinessProcessable {
         let isAscending = request.isSortByAscending
         
         let sortedCurrencies = sortResults(results: metrics, isAscending: isAscending)
-        let responce = CryptoListModel.Responce(metrics: sortedCurrencies)
+        let responce = CryptoListModel.Currencies.Responce(metrics: sortedCurrencies)
         presenter.presentSuccess(responce: responce)
     }
     

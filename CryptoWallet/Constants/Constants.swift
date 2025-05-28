@@ -9,6 +9,7 @@ import Foundation
 
 enum Constants {
     static let apiURL = "https://data.messari.io/api/v1/assets"
+    static let imageURL = "https://asset-images.messari.io/images"
     static let currencies = [
         "btc",
         "eth",

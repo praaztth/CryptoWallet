@@ -12,6 +12,7 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.backgroundColor = .white
+        tabBar.tintColor = .black
         setupTabs()
     }
     
@@ -25,11 +26,11 @@ class MainTabBarController: UITabBarController {
         let stub3 = ViewControllerStub()
         let stub4 = ViewControllerStub()
         
-        nvc.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 0)
-        stub1.tabBarItem = UITabBarItem(tabBarSystemItem: .contacts, tag: 1)
-        stub2.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 2)
-        stub3.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 3)
-        stub4.tabBarItem = UITabBarItem(tabBarSystemItem: .featured, tag: 4)
+        nvc.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), tag: 0)
+        stub1.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "chart.bar"), tag: 1)
+        stub2.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "creditcard"), tag: 2)
+        stub3.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "doc.plaintext"), tag: 3)
+        stub4.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person"), tag: 4)
         
         viewControllers = [nvc, stub1, stub2, stub3, stub4]
     }

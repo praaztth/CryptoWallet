@@ -8,35 +8,62 @@
 import Foundation
 
 struct CryptoListModel {
-    struct Request {
+    struct SortRequest {
         let isSortByAscending: Bool
-        let cells: [CryptoListModel.CellViewModel]
+        let cells: [CryptoListModel.Currencies.CellViewModel]
     }
     
-    struct Responce {
-        let metrics: [Metrics]?
-        let error: NetworkServiceError?
+    struct Currencies {
+        struct Responce {
+            let metrics: [Metrics]?
+            let error: NetworkServiceError?
+            
+            init(metrics: [Metrics]? = nil, error: NetworkServiceError? = nil) {
+                self.metrics = metrics
+                self.error = error
+            }
+        }
         
-        init(metrics: [Metrics]? = nil, error: NetworkServiceError? = nil) {
-            self.metrics = metrics
-            self.error = error
+        struct ViewModel {
+            let cellViewModels: [CellViewModel]
+        }
+        
+        struct CellViewModel {
+            let id: String
+            let name: String
+            let symbol: String
+            let price: String
+            let iconName: String
+            let iconColor: PercentColor
+            let percentChange: String
+            let marketcap: String
+            let circulatingSupply: String
         }
     }
     
-    struct ViewModel {
-        let cellViewModels: [CellViewModel]
+    struct ImageFetching {
+        struct Request {
+            let id: String
+            let index: Int
+        }
+        
+        struct Responce {
+            let data: Data?
+            let index: Int
+            
+            init(data: Data?, index: Int) {
+                self.data = data
+                self.index = index
+            }
+        }
+        
+        struct ViewModel {
+            let data: Data?
+            let indexPath: IndexPath
+        }
     }
     
-    struct CellViewModel {
-        let name: String
-        let symbol: String
-        let price: String
-        let iconName: String
-        let iconColor: PercentColor
-        let percentChange: String
-        let marketcap: String
-        let circulatingSupply: String
-    }
+    
 }
 
 struct Metrics: Decodable {
@@ -48,6 +75,7 @@ struct Status: Decodable {
 }
 
 struct DataObject: Decodable {
+    let id: String
     let symbol: String
     let name: String
     let market_data: MarketData

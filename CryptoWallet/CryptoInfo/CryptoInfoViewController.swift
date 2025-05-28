@@ -20,12 +20,12 @@ protocol CryptoInfoButtonsProtocol {
 class CryptoInfoViewController: UIViewController {
     let cryptoInfoView = CryptoInfoView()
     
-    var viewModel: CryptoListModel.CellViewModel
+    var viewModel: CryptoListModel.Currencies.CellViewModel
     
     var router: CryptoInfoRoutingProcessable?
     var interactor: CryptoInfoBusinessProcessable?
     
-    init(configurator: CryptoInfoConfigurator, viewModel: CryptoListModel.CellViewModel) {
+    init(configurator: CryptoInfoConfigurator, viewModel: CryptoListModel.Currencies.CellViewModel) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
