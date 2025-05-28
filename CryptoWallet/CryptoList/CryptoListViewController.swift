@@ -54,8 +54,8 @@ class CryptoListViewController: UIViewController, CryptoListDisplayProcessable {
     
     func loadData() {
         cryptoListView.startLoading()
-        interactor?.loadData()
         cryptoListView.clearSortingSelection()
+        interactor?.loadData()
     }
     
     func displayCurrencies(viewModel: CryptoListModel.ViewModel) {

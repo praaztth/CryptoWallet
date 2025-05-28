@@ -37,6 +37,7 @@ class CryptoInfoViewController: UIViewController {
     }
     
     override func loadView() {
+        cryptoInfoView.frame = UIScreen.main.bounds
         view = cryptoInfoView
     }
     
