@@ -43,6 +43,7 @@ class CryptoInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         cryptoInfoView.configure(with: self.viewModel, delegate: self)
     }
 }
@@ -60,5 +61,11 @@ extension CryptoInfoViewController: CryptoInfoButtonsProtocol {
     
     func logoutButtonTapped() {
         interactor?.logout()
+    }
+}
+
+extension CryptoInfoViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationController?.viewControllers.count ?? 0 > 1
     }
 }
