@@ -37,33 +37,19 @@ class NetworkService: NetworkServiceProtocol {
                 return
             }
             
-            let task = URLSession.shared.dataTask(with: url) { data, Responce, error in
-                if let error = error {
-                    self.error = .requestFailed(error.localizedDescription)
-                    dispatchGroup.leave()
-                    return
-                }
-                
-                guard let data = data else {
-                    self.error = .emptyResponce
-                    dispatchGroup.leave()
-                    return
-                }
-                
-                do {
-                    let metrics = try JSONDecoder().decode(Metrics.self, from: data)
+            fetchAndDecodeData(url: url) { (result: Result<Metrics, NetworkServiceError>) in
+                switch result {
+                case .success(let currency):
                     // thread-safe array insertion
                     serialDispatchQueue.sync {
-                        self.results.append(metrics)
+                        self.results.append(currency)
                     }
-                } catch {
-                    self.error = .decodingFailed
+                case .failure(let error):
+                    self.error = error
                 }
                 
                 dispatchGroup.leave()
             }
-            
-            task.resume()
         }
         
         dispatchGroup.notify(queue: .main) {
@@ -85,14 +71,48 @@ class NetworkService: NetworkServiceProtocol {
             return
         }
         
-        DispatchQueue.global(qos: .utility).async {
-            do {
-                let imageData = try Data(contentsOf: url)
-                completion(.success(imageData))
-            } catch {
-                completion(.failure(NetworkServiceError.requestFailed(error.localizedDescription)))
+        fetchData(url: url) { (result: Result<Data, NetworkServiceError>) in
+            switch result {
+            case .success(let data):
+                completion(.success(data))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
+    }
+    
+    func fetchAndDecodeData<T: Decodable>(url: URL, completion: @escaping (Result<T, NetworkServiceError>) -> Void) {
+        fetchData(url: url) { (result: Result<Data, NetworkServiceError>) in
+            switch result {
+            case .success(let encodedData):
+                do {
+                    let decodedData = try JSONDecoder().decode(T.self, from: encodedData)
+                    completion(.success(decodedData))
+                } catch {
+                    completion(.failure(.decodingFailed))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchData(url: URL, completion: @escaping (Result<Data, NetworkServiceError>) -> Void) {
+        let task = URLSession.shared.dataTask(with: url) { data, Responce, error in
+            if let error = error {
+                completion(.failure(.requestFailed(error.localizedDescription)))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(.emptyResponce))
+                return
+            }
+            
+            completion(.success(data))
+        }
+        
+        task.resume()
     }
     
     func currencyURL(currency: String) -> URL? {
